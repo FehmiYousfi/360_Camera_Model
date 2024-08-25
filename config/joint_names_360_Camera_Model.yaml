@@ -1,0 +1,35 @@
+
+#Controller to control R1 joints
+ROTATOR_1_controller:
+ type: "position_controllers/JointTrajectoryController"
+ joints: [Rotator_1_joint]
+
+#Controller to control R2 joints
+ROTATOR_2_controller:
+ type: "position_controllers/JointTrajectoryController"
+ joints: [Rotator_2_joint]
+
+#Controller to control R3 joints
+ROTATOR_3_controller:
+ type: "position_controllers/JointTrajectoryController"
+ joints: [Rotator_3_joint]
+
+#Controller to continuously publish joint states/positions
+joint_state_controller:
+ type: "joint_state_controller/JointStateController"
+ publish_rate: 50
+
+gazebo_ros_control:
+  pid_gains:
+    Rotator_1_joint:
+      p: 100.0
+      i: 0.01
+      d: 1.0
+    Rotator_2_joint:
+      p: 100.0
+      i: 0.01
+      d: 1.0
+    Rotator_3_joint:
+      p: 100.0
+      i: 0.01
+      d: 1.0

@@ -1,0 +1,52 @@
+<package format="2">
+  <name>360_Camera_Model</name>
+  <version>1.0.0</version>
+  <description>
+    <p>URDF Description package for 360_Camera_Model</p>
+    <p>This package contains configuration data, 3D models and launch files
+for 360_Camera_Model robot</p>
+  </description>
+  <author>UltimaRobotics</author>
+  <maintainer email="fehmi_yousfi@hotmail.com" />
+  <license>BSD</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roslaunch</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>rviz</depend>
+  <depend>joint_state_publisher</depend>
+  <depend>gazebo</depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>urdf</build_depend>
+  <build_depend>xacro</build_depend>
+  <build_depend>message_generation</build_depend>
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>urdf</exec_depend>
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>message_runtime</exec_depend>
+  <export>
+    <architecture_independent />
+  </export>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Build dependencies -->
+  <build_depend>roscpp</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>tf</build_depend>
+
+  <!-- Build and export dependencies -->
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>sensor_msgs</build_export_depend>
+  <build_export_depend>tf</build_export_depend>
+  
+</package>
