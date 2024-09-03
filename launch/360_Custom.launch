@@ -9,7 +9,6 @@
     <param name="robot_description" textfile="$(find 360_Camera_Model)/urdf/360_Camera_Model.urdf"/>
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch" />
-    <node name="tf_footprint_base" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 base_link base_footprint 40" />
 
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-x $(arg arg_x) -y $(arg arg_y) -z $(arg arg_z) -Y $(arg arg_Y) -param robot_description -urdf -model 360_Camera_Model -J Rotator_1_motor 0.0 -J Rotator_2_motor 0.0 -J Rotator_3_motor 0.0 " />
 
@@ -20,6 +19,5 @@
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>
     
     <param name="available_models" value="[world, 360_Camera_Model]" />
-    <!-- <node pkg="360_Camera_Model" type="robot_info_collector" name="robot_info_collector" output="screen"/> -->
 
 </launch>

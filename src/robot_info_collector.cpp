@@ -1,7 +1,16 @@
 #include <ros/ros.h>
-#include <sensor_msgs/JointState.h>
-#include <geometry_msgs/TransformStamped.h>
-#include <tf/transform_listener.h>
+#include <std_msgs/Float64.h>
+#include <control_msgs/FollowJointTrajectoryActionFeedback.h>
+#include <control_msgs/FollowJointTrajectoryActionGoal.h>
+#include <control_msgs/FollowJointTrajectoryActionResult.h>
+#include <control_msgs/JointTrajectoryControllerState.h>
+#include <actionlib_msgs/GoalStatusArray.h>
+
+#include <vector>
+#include <string>
+
+#include "collcetors.h"
+
 
 class RobotInfoCollector
 {
@@ -9,70 +18,88 @@ public:
     RobotInfoCollector()
     {
         ros::NodeHandle nh;
-        tf_listener_ = new tf::TransformListener();
-        joint_states_sub_ = nh.subscribe("/joint_states", 10, &RobotInfoCollector::jointStatesCallback, this);
-    }
 
-    ~RobotInfoCollector()
-    {
-        delete tf_listener_;
+        rotator1_feedback_sub_ = nh.subscribe("/ROTATOR_1_controller/follow_joint_trajectory/feedback", 10, &RobotInfoCollector::feedbackCallback, this);
+        rotator1_result_sub_ = nh.subscribe("/ROTATOR_1_controller/follow_joint_trajectory/result", 10, &RobotInfoCollector::resultCallback, this);
+        rotator1_status_sub_ = nh.subscribe("/ROTATOR_1_controller/follow_joint_trajectory/status", 10, &RobotInfoCollector::statusCallback, this);
+        rotator1_state_sub_ = nh.subscribe("/ROTATOR_1_controller/state", 10, &RobotInfoCollector::stateCallback, this);
+
     }
 
     void collectInfo()
     {
-        ros::Rate rate(10.0);
-        while (ros::ok())
-        {
-            try
-            {
-                tf::StampedTransform transform;
-                tf_listener_->lookupTransform("Fixed_base", "link",ros::Time(0), transform);
-
-                ROS_INFO("Transform from world to base_link:");
-                ROS_INFO("Translation: x = %f, y = %f, z = %f",
-                         transform.getOrigin().x(),
-                         transform.getOrigin().y(),
-                         transform.getOrigin().z());
-                ROS_INFO("Rotation: x = %f, y = %f, z = %f, w = %f",
-                         transform.getRotation().x(),
-                         transform.getRotation().y(),
-                         transform.getRotation().z(),
-                         transform.getRotation().w());
-            }
-            catch (tf::TransformException& ex)
-            {
-                ROS_WARN("Transform error: %s", ex.what());
-            }
-            ROS_INFO("Current joint states:");
-            for (size_t i = 0; i < joint_names_.size(); ++i)
-            {
-                ROS_INFO("Joint %s: position = %f, velocity = %f, effort = %f",
-                         joint_names_[i].c_str(),
-                         joint_positions_[i],
-                         joint_velocities_[i],
-                         joint_efforts_[i]);
-            }
-
-            ros::spinOnce();
-            rate.sleep();
-        }
+        ros::spin();
     }
 
 private:
-    void jointStatesCallback(const sensor_msgs::JointState::ConstPtr& msg)
+
+    void feedbackCallback(const control_msgs::FollowJointTrajectoryActionFeedback::ConstPtr& msg)
     {
-        joint_names_ = msg->name;
-        joint_positions_ = msg->position;
-        joint_velocities_ = msg->velocity;
-        joint_efforts_ = msg->effort;
+        FollowJointTrajectoryFeedbackData data;
+        data.feedback_info.joint_names = msg->feedback.joint_names;
+        data.feedback_info.desired.fromMsg(msg->feedback.desired);
+        data.feedback_info.actual.fromMsg(msg->feedback.actual);
+        data.feedback_info.error.fromMsg(msg->feedback.error);
+
+        data.printData();
     }
 
-    tf::TransformListener* tf_listener_;
-    ros::Subscriber joint_states_sub_;
-    std::vector<std::string> joint_names_;
-    std::vector<double> joint_positions_;
-    std::vector<double> joint_velocities_;
-    std::vector<double> joint_efforts_;
+    void resultCallback(const control_msgs::FollowJointTrajectoryActionResult::ConstPtr& msg)
+    {
+        FollowJointTrajectoryResultData data;
+
+        data.status_info.goal_id = msg->status.goal_id.id;
+        data.status_info.status = msg->status.status;
+        data.status_info.text = msg->status.text;
+        data.error_code = msg->result.error_code;
+        data.error_string = msg->result.error_string;
+
+        data.printData();
+    }
+    void statusCallback(const actionlib_msgs::GoalStatusArray::ConstPtr& msg)
+    {
+        GoalStatusData data;
+        for (const auto& status : msg->status_list)
+        {
+            GoalStatusData::StatusInfo info;
+            info.goal_id = status.goal_id.id;
+            info.status = status.status;
+            info.text = status.text;
+
+            data.status_list.push_back(info);
+        }
+        data.printData();
+    }
+
+
+    void stateCallback(const control_msgs::JointTrajectoryControllerState::ConstPtr& msg)
+    {
+        JointTrajectoryData data;
+
+        data.desired_positions = msg->desired.positions;
+        data.desired_velocities = msg->desired.velocities;
+        data.desired_accelerations = msg->desired.accelerations;
+        data.desired_effort = msg->desired.effort;
+
+        data.actual_positions = msg->actual.positions;
+        data.actual_velocities = msg->actual.velocities;
+        data.actual_accelerations = msg->actual.accelerations;
+        data.actual_effort = msg->actual.effort;
+
+        data.error_positions = msg->error.positions;
+        data.error_velocities = msg->error.velocities;
+        data.error_accelerations = msg->error.accelerations;
+        data.error_effort = msg->error.effort;
+
+        data.printData();
+    }
+
+
+    ros::Subscriber rotator1_feedback_sub_;
+    ros::Subscriber rotator1_result_sub_;
+    ros::Subscriber rotator1_status_sub_;
+    ros::Subscriber rotator1_state_sub_;
+
 };
 
 int main(int argc, char** argv)
