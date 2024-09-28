@@ -2,17 +2,17 @@
 #Controller to control R1 joints
 ROTATOR_1_controller:
  type: "position_controllers/JointTrajectoryController"
- joints: [Rotator_1_joint]
+ joints: [Rotator_1_to_Fixed_base]
 
 #Controller to control R2 joints
 ROTATOR_2_controller:
  type: "position_controllers/JointTrajectoryController"
- joints: [Rotator_2_joint]
+ joints: [Rotator_2_to_Rotator_1]
 
 #Controller to control R3 joints
 ROTATOR_3_controller:
  type: "position_controllers/JointTrajectoryController"
- joints: [Rotator_3_joint]
+ joints: [Rotator_3_to_Rotator_2]
 
 #Controller to continuously publish joint states/positions
 joint_state_controller:
@@ -21,15 +21,15 @@ joint_state_controller:
 
 gazebo_ros_control:
   pid_gains:
-    Rotator_1_joint:
+    Rotator_1_to_Fixed_base:
       p: 100.0
       i: 0.01
       d: 1.0
-    Rotator_2_joint:
+    Rotator_2_to_Rotator_1:
       p: 100.0
       i: 0.01
       d: 1.0
-    Rotator_3_joint:
+    Rotator_3_to_Rotator_2:
       p: 100.0
       i: 0.01
       d: 1.0

@@ -1,0 +1,55 @@
+Visualization Manager:
+  Class: ""
+  Enabled: true
+  Name: "root"
+  Panels:
+    - Class: rviz/Displays
+      Enabled: true
+      Name: "Displays"
+      Property Tree Widget:
+        Expanded: true
+        Splitter Ratio: 0.5
+
+    - Class: rviz/Time
+      Enabled: true
+      Name: "Time"
+      Property Tree Widget:
+        Expanded: false
+        Splitter Ratio: 0.5
+
+    - Class: rviz/Views
+      Enabled: true
+      Name: "Views"
+      Property Tree Widget:
+        Expanded: true
+        Splitter Ratio: 0.5
+
+Displays:
+  - Class: rviz/RobotModel
+    Enabled: true
+    Name: "Robot Model"
+    Robot Description: "robot_description"
+    Value: <property type="bool" name="Enabled" value="true"/>
+
+  - Class: rviz/TF
+    Enabled: true
+    Name: "TF"
+    Value: <property type="bool" name="Enabled" value="true"/>
+
+  - Class: rviz/Grid
+    Enabled: true
+    Name: "Grid"
+    Cell Count: 20
+    Cell Size: 1.0
+    Line Style:
+      Value: <property type="string" name="Style" value="Lines"/>
+    Color: <property type="color" r="1" g="1" b="1"/>
+    Value: <property type="bool" name="Enabled" value="true"/>
+
+Views:
+  Current:
+    Class: rviz/Orbit
+    Distance: 10
+    Focal Point: <vector3 x="0" y="0" z="1"/>
+    Pitch: 1.0
+    Yaw: 1.0

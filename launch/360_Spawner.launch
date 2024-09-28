@@ -4,16 +4,12 @@
     <arg name="arg_z" default="1.00" />
     <arg name="arg_R" default="0.00" />
     <arg name="arg_P" default="0.00" />
-    <arg name="arg_Y" default="0.00" />
+    <arg name="arg_Y" default="0.00" />   
 
-    <!-- <arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz"/> -->
-    
     <param name="robot_description" textfile="$(find 360_Camera_Model)/urdf/360_Camera_Model.urdf"/>
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch" />
-
-    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-x $(arg arg_x) -y $(arg arg_y) -z $(arg arg_z) -Y $(arg arg_Y) -param robot_description -urdf -model 360_Camera_Model -J Rotator_1_motor 0.0 -J Rotator_2_motor 0.0 -J Rotator_3_motor 0.0 " />
-
+    
     <rosparam file ="$(find 360_Camera_Model)/config/joint_names_360_Camera_Model.yaml" command="load"/>  
 
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="ROTATOR_1_controller ROTATOR_2_controller ROTATOR_3_controller"/>
@@ -22,5 +18,5 @@
     
     <param name="available_models" value="[world, 360_Camera_Model]" />
 
-    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" output="screen"/> -->
 </launch>
+

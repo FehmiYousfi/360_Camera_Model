@@ -1,278 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
-     Commit Version: 1.5.1-0-g916b5db  Build Version: 1.5.7152.31018
-     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
-<robot
-  name="360_Camera_Model">
+<robot name="360_Camera_Model">
   <link name="world" />
-  <link
-    name="Fixed_base">
+
+  <!-- Base Link -->
+  <link name="base_link">
     <inertial>
-      <origin
-        xyz="3.428E-06 -1.7595E-06 0.0049168"
-        rpy="0 0 0" />
-      <mass
-        value="0.19268" />
-      <inertia
-        ixx="0.00057822"
-        ixy="2.1481E-12"
-        ixz="6.968E-13"
-        iyy="0.00057822"
-        iyz="2.7969E-13"
-        izz="0.0011423" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.19268" />
+      <inertia ixx="0.00057822" ixy="2.1481E-12" ixz="6.968E-13" iyy="0.00057822" iyz="2.7969E-13" izz="0.0011423" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://360_Camera_Model/meshes/Fixed_base.STL" />
+        <box size="0.1 0.1 0.1"/> <!-- Placeholder geometry -->
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.62745 0.62745 0.62745 1" />
-      </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://360_Camera_Model/meshes/Fixed_base.STL" />
+        <box size="0.1 0.1 0.1"/> <!-- Placeholder geometry -->
       </geometry>
     </collision>
   </link>
   <joint name="base_to_world" type="fixed">
     <origin xyz="0 0 0" rpy="0 0 0" />
     <parent link="world" />
-    <child link="Fixed_base" />
+    <child link="base_link" />
   </joint>
+  
 
-  <link
-    name="Rotator_1">
+  <!-- Fixed Base Link -->
+  <link name="Fixed_base">
     <inertial>
-      <origin
-        xyz="0.00173326666598543 -1.18295111714573E-06 -0.0292416563739805"
-        rpy="0 0 0" />
-      <mass
-        value="0.211155297251793" />
-      <inertia
-        ixx="0.00013475741543411"
-        ixy="1.88764504105626E-09"
-        ixz="4.8584569978704E-09"
-        iyy="0.000401037477932494"
-        iyz="-6.28659317173641E-09"
-        izz="0.000514587215846427" />
+      <origin xyz="3.428E-06 -1.7595E-06 0.0049168" rpy="0 0 0" />
+      <mass value="0.19268" />
+      <inertia ixx="0.00057822" ixy="2.1481E-12" ixz="6.968E-13" iyy="0.00057822" iyz="2.7969E-13" izz="0.0011423" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://360_Camera_Model/meshes/Rotator_1.STL" />
+        <mesh filename="package://360_Camera_Model/meshes/Fixed_base.STL" />
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.627450980392157 0.627450980392157 0.627450980392157 1" />
+      <material name="">
+        <color rgba="0.62745 0.62745 0.62745 1" />
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://360_Camera_Model/meshes/Rotator_1.STL" />
+        <mesh filename="package://360_Camera_Model/meshes/Fixed_base.STL" />
       </geometry>
     </collision>
   </link>
   
-  <joint
-    name="Rotator_1_joint"
-    type="revolute">
-    <origin
-      xyz="0 0 0"
-      rpy="0 0 0" />
-    <parent
-      link="Fixed_base" />
-    <child
-      link="Rotator_1" />
-    <axis
-      xyz="0 0 -1" />
-    <limit
-      lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+  <!-- Fixed Base to Base Link Joint -->
+  <joint name="fixed_base_to_base_link" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="world" />
+    <child link="Fixed_base" />
   </joint>
-  <link
-    name="Rotator_2">
+
+  <!-- Rotator 1 Link -->
+  <link name="Rotator_1">
     <inertial>
-      <origin
-        xyz="-0.0684967556376185 0.0174739924993098 -0.00437415359482138"
-        rpy="0 0 0" />
-      <mass
-        value="0.239977822875698" />
-      <inertia
-        ixx="0.000226034546072867"
-        ixy="6.43769980482789E-08"
-        ixz="-2.46933192968024E-08"
-        iyy="0.000379549361150043"
-        iyz="-4.31497247906742E-09"
-        izz="0.000230015780419545" />
+      <origin xyz="0.001733 -0.00000118 -0.02924" rpy="0 0 0" />
+      <mass value="0.211155" />
+      <inertia ixx="0.000134757" ixy="1.887E-09" ixz="4.858E-09" iyy="0.000401037" iyz="-6.286E-09" izz="0.000514587" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://360_Camera_Model/meshes/Rotator_2.STL" />
+        <mesh filename="package://360_Camera_Model/meshes/Rotator_1.STL" />
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.627450980392157 0.627450980392157 0.627450980392157 1" />
+      <material name="">
+        <color rgba="0.62745 0.62745 0.62745 1" />
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://360_Camera_Model/meshes/Rotator_2.STL" />
+        <mesh filename="package://360_Camera_Model/meshes/Rotator_1.STL" />
       </geometry>
     </collision>
   </link>
-  <joint
-    name="Rotator_2_joint"
-    type="revolute">
-    <origin
-      xyz="0.070003 0 -0.096227"
-      rpy="0 0 0" />
-    <parent
-      link="Rotator_1" />
-    <child
-      link="Rotator_2" />
-    <axis
-      xyz="-1 0 0" />
-    <limit
-      lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+  
+  <!-- Rotator 1 Joint -->
+  <joint name="Rotator_1_to_Fixed_base" type="continuous">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="Fixed_base" />
+    <child link="Rotator_1" />
+    <axis xyz="0 0 1" />
+    <limit lower="0" upper="6.28319" effort="10" velocity="1" />
   </joint>
-  <link
-    name="Rotator_3">
+  
+  <!-- Rotator 2 Link -->
+  <link name="Rotator_2">
     <inertial>
-      <origin
-        xyz="1.04640013953542E-06 -0.0462679452318092 -1.63593142939594E-05"
-        rpy="0 0 0" />
-      <mass
-        value="0.0829452509097665" />
-      <inertia
-        ixx="1.68870403026113E-05"
-        ixy="1.61131296618213E-08"
-        ixz="3.42222671503696E-10"
-        iyy="1.6875120646378E-05"
-        iyz="1.42095814711735E-08"
-        izz="1.69221502082657E-05" />
+      <origin xyz="-0.0685 0.01747 -0.00437" rpy="0 0 0" />
+      <mass value="0.239977" />
+      <inertia ixx="0.000226034" ixy="6.438E-08" ixz="-2.469E-08" iyy="0.000379549" iyz="-4.315E-09" izz="0.000230015" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://360_Camera_Model/meshes/Rotator_3.STL" />
+        <mesh filename="package://360_Camera_Model/meshes/Rotator_2.STL" />
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.627450980392157 0.627450980392157 0.627450980392157 1" />
+      <material name="">
+        <color rgba="0.62745 0.62745 0.62745 1" />
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://360_Camera_Model/meshes/Rotator_3.STL" />
+        <mesh filename="package://360_Camera_Model/meshes/Rotator_2.STL" />
       </geometry>
     </collision>
   </link>
-  <joint
-    name="Rotator_3_joint"
-    type="revolute">
-    <origin
-      xyz="-0.07 0.040958 0"
-      rpy="0 0 0" />
-    <parent
-      link="Rotator_2" />
-    <child
-      link="Rotator_3" />
-    <axis
-      xyz="0 -1 0" />
-    <limit
-      lower="0"
-      upper="0"
-      effort="0"
-      velocity="0" />
+  
+  <!-- Rotator 2 Joint -->
+  <joint name="Rotator_2_to_Rotator_1" type="revolute">
+    <origin xyz="0.070003 0 -0.096227" rpy="0 0 0" />
+    <parent link="Rotator_1" />
+    <child link="Rotator_2" />
+    <axis xyz="1 1 1" />
+    <limit lower="0" upper="3.14159" effort="10" velocity="1" />
+  </joint>
+  
+  <!-- Rotator 3 Link -->
+  <link name="Rotator_3">
+    <inertial>
+      <origin xyz="0.00000105 -0.04627 -0.0000164" rpy="0 0 0" />
+      <mass value="0.082945" />
+      <inertia ixx="1.688E-05" ixy="1.611E-08" ixz="3.422E-10" iyy="1.688E-05" iyz="1.421E-08" izz="1.692E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://360_Camera_Model/meshes/Rotator_3.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.62745 0.62745 0.62745 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://360_Camera_Model/meshes/Rotator_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <!-- Rotator 3 Joint -->
+  <joint name="Rotator_3_to_Rotator_2" type="revolute">
+    <origin xyz="-0.07 0.040958 0" rpy="0 0 0" />
+    <parent link="Rotator_2" />
+    <child link="Rotator_3" />
+    <axis xyz="1 1 1" />
+    <limit lower="0" upper="1.5708" effort="1" velocity="1" />
   </joint>
 
-
+  <!-- Transmission for Rotator 1 -->
   <transmission name="Rotator_1_trans">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="Rotator_1_joint">
-    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface></joint>
-    <actuator name="Rotator_1_motor">
-    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> <mechanicalReduction>1</mechanicalReduction>
+    <joint name="Rotator_1_to_Fixed_base">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="Rotator_1_to">
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
 
-    <transmission name="Rotator_2_trans">
+  <!-- Transmission for Rotator 2 -->
+  <transmission name="Rotator_2_trans">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="Rotator_2_joint">
-    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface></joint>
-    <actuator name="Rotator_2_motor">
-    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> <mechanicalReduction>1</mechanicalReduction>
+    <joint name="Rotator_2_to_Rotator_1">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="rotator2_motor">
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
 
-    <transmission name="Rotator_3_trans">
+  <!-- Transmission for Rotator 3 -->
+  <transmission name="Rotator_3_trans">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="Rotator_3_joint">
-    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface></joint>
-    <actuator name="Rotator_3_motor">
-    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> <mechanicalReduction>1</mechanicalReduction>
+    <joint name="Rotator_3_to_Rotator_2">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="rotator3_motor">
+      <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
 
+  <!-- Gazebo Plugins for Control -->
   <gazebo>
-    <plugin name="control"
-    filename="libgazebo_ros_control.so">
-    <robotNamespace>/</robotNamespace>
+    <plugin name="control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/</robotNamespace>
     </plugin>
   </gazebo>
-
-  <gazebo reference="Fixed_base">
+  
+  <!-- Gazebo Self Collision Settings -->
+  <gazebo>
     <selfCollide>true</selfCollide>
   </gazebo>
-  <gazebo reference="Rotator_1">
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="Rotator_2">
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="Rotator_3">
-    <selfCollide>true</selfCollide>
-  </gazebo>
-
 </robot>

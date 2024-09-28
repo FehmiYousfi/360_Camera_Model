@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
 	urdf
 	xacro
 	message_generation
+	roslib 
 )
 
 catkin_package( 
@@ -21,6 +22,7 @@ catkin_package(
 	roscpp
 	rospy
 	std_msgs
+	
 )
 
 add_subdirectory(${CMAKE_HOME_DIRECTORY}/${ParentProject}/src)

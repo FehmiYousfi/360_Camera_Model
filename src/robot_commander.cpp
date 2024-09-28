@@ -2,7 +2,10 @@
 #include <trajectory_msgs/JointTrajectory.h>
 #include <trajectory_msgs/JointTrajectoryPoint.h>
 
-// Helper function to create and populate a JointTrajectoryPoint
+#define full_Turn 6.28
+#define LockPos 0
+
+// Function to create a trajectory point
 trajectory_msgs::JointTrajectoryPoint createTrajectoryPoint(double pos1, double pos2, double pos3, double duration) {
     trajectory_msgs::JointTrajectoryPoint point;
     point.positions.push_back(pos1); // Position for Rotator_1_joint
@@ -21,8 +24,7 @@ trajectory_msgs::JointTrajectoryPoint createTrajectoryPoint(double pos1, double 
     return point;
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     ros::init(argc, argv, "joint_controller_node");
     ros::NodeHandle nh;
 
@@ -31,38 +33,80 @@ int main(int argc, char **argv)
     ros::Publisher rotator_2_pub = nh.advertise<trajectory_msgs::JointTrajectory>("/ROTATOR_2_controller/command", 10);
     ros::Publisher rotator_3_pub = nh.advertise<trajectory_msgs::JointTrajectory>("/ROTATOR_3_controller/command", 10);
 
-    ros::Rate loop_rate(1); // 1 Hz
+    ros::Rate loop_rate(1); // Loop rate set to 1 Hz
 
-    while (ros::ok())
-    {
-        trajectory_msgs::JointTrajectory rotator_1_trajectory;
-        rotator_1_trajectory.header.stamp = ros::Time::now();
-        rotator_1_trajectory.header.frame_id = "Rotator_1";
-        rotator_1_trajectory.joint_names.push_back("Rotator_1_joint");
-        rotator_1_trajectory.points.push_back(createTrajectoryPoint(1.0, 0.0, 0.0, 1.0)); // Example values
+    ROS_INFO("Starting Joint Command Control.");
+    loop_rate.sleep();
+    ros::spinOnce();
 
-        trajectory_msgs::JointTrajectory rotator_2_trajectory;
-        rotator_2_trajectory.header.stamp = ros::Time::now();
-        rotator_2_trajectory.header.frame_id = "Rotator_2";
-        rotator_2_trajectory.joint_names.push_back("Rotator_2_joint");
-        rotator_2_trajectory.points.push_back(createTrajectoryPoint(0.0, 1.0, 0.0, 1.0)); // Example values
+    // Start time for the trajectory
+    ros::Time start_time = ros::Time::now();
 
-        trajectory_msgs::JointTrajectory rotator_3_trajectory;
-        rotator_3_trajectory.header.stamp = ros::Time::now();
-        rotator_3_trajectory.header.frame_id = "Rotator_3";
-        rotator_3_trajectory.joint_names.push_back("Rotator_3_joint");
-        rotator_3_trajectory.points.push_back(createTrajectoryPoint(0.0, 0.0, 1.0, 1.0)); // Example values
+    // Rotator 1 trajectory
+    trajectory_msgs::JointTrajectory rotator_1_trajectory;
+    rotator_1_trajectory.header.stamp = start_time;
+    rotator_1_trajectory.header.frame_id = "Rotator_1";
+    rotator_1_trajectory.joint_names.push_back("Rotator_1_to_Fixed_base");
+    rotator_1_trajectory.points.push_back(createTrajectoryPoint(full_Turn / 4, 0.0, 0.0, 1.0));
+    rotator_1_pub.publish(rotator_1_trajectory);
+    ROS_INFO("Published joint trajectory commands for Rotator_1.");
+    ros::spinOnce();
+    loop_rate.sleep();
 
-        // Publish the messages
-        rotator_1_pub.publish(rotator_1_trajectory);
-        rotator_2_pub.publish(rotator_2_trajectory);
-        rotator_3_pub.publish(rotator_3_trajectory);
+    // Rotator 2 trajectory
+    trajectory_msgs::JointTrajectory rotator_2_trajectory;
+    rotator_2_trajectory.header.stamp = ros::Time::now();
+    rotator_2_trajectory.header.frame_id = "Rotator_2";
+    rotator_2_trajectory.joint_names.push_back("Rotator_2_to_Rotator_1");
+    rotator_2_trajectory.points.push_back(createTrajectoryPoint(0.0, full_Turn / 4, 0.0, 1.0));
+    rotator_2_pub.publish(rotator_2_trajectory);
+    ROS_INFO("Published joint trajectory commands for Rotator_2.");
+    ros::spinOnce();
+    loop_rate.sleep();
 
-        ROS_INFO("Published joint trajectory commands.");
+    // Rotator 3 trajectory
+    trajectory_msgs::JointTrajectory rotator_3_trajectory;
+    rotator_3_trajectory.header.stamp = ros::Time::now();
+    rotator_3_trajectory.header.frame_id = "Rotator_3";
+    rotator_3_trajectory.joint_names.push_back("Rotator_3_to_Rotator_2");
+    rotator_3_trajectory.points.push_back(createTrajectoryPoint(0.0, 0.0, full_Turn / 4, 1.0));
+    rotator_3_pub.publish(rotator_3_trajectory);
+    ROS_INFO("Published joint trajectory commands for Rotator_3.");
+    ros::spinOnce();
+    loop_rate.sleep();
 
-        ros::spinOnce();
-        loop_rate.sleep();
-    }
+    // Return Rotator 1 to initial position
+    trajectory_msgs::JointTrajectory rotator_1_trajectory_rev;
+    rotator_1_trajectory_rev.header.stamp = ros::Time::now();
+    rotator_1_trajectory_rev.header.frame_id = "Rotator_1";
+    rotator_1_trajectory_rev.joint_names.push_back("Rotator_1_to_Fixed_base");
+    rotator_1_trajectory_rev.points.push_back(createTrajectoryPoint(0.0, 0.0, 0.0, 1.0));
+    rotator_1_pub.publish(rotator_1_trajectory_rev);
+    ROS_INFO("Returning joint Rotator_1 to initial position.");
+    ros::spinOnce();
+    loop_rate.sleep();
+
+    // Return Rotator 2 to initial position
+    trajectory_msgs::JointTrajectory rotator_2_trajectory_rev;
+    rotator_2_trajectory_rev.header.stamp = ros::Time::now();
+    rotator_2_trajectory_rev.header.frame_id = "Rotator_2";
+    rotator_2_trajectory_rev.joint_names.push_back("Rotator_2_to_Rotator_1");
+    rotator_2_trajectory_rev.points.push_back(createTrajectoryPoint(0.0, 0.0, 0.0, 1.0));
+    rotator_2_pub.publish(rotator_2_trajectory_rev);
+    ROS_INFO("Returning joint Rotator_2 to initial position.");
+    ros::spinOnce();
+    loop_rate.sleep();
+
+    // Return Rotator 3 to initial position
+    trajectory_msgs::JointTrajectory rotator_3_trajectory_rev;
+    rotator_3_trajectory_rev.header.stamp = ros::Time::now();
+    rotator_3_trajectory_rev.header.frame_id = "Rotator_3";
+    rotator_3_trajectory_rev.joint_names.push_back("Rotator_3_to_Rotator_2");
+    rotator_3_trajectory_rev.points.push_back(createTrajectoryPoint(0.0, 0.0, 0.0, 1.0));
+    rotator_3_pub.publish(rotator_3_trajectory_rev);
+    ROS_INFO("Returning joint Rotator_3 to initial position.");
+    ros::spinOnce();
+    loop_rate.sleep();
 
     return 0;
 }
